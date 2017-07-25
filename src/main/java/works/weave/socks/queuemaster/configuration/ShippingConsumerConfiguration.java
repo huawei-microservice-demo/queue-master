@@ -10,35 +10,34 @@ import org.springframework.context.annotation.Configuration;
 import works.weave.socks.queuemaster.ShippingTaskHandler;
 
 @Configuration
-public class ShippingConsumerConfiguration extends RabbitMqConfiguration
-{
-	protected final String queueName = "shipping-task";
+public class ShippingConsumerConfiguration extends RabbitMqConfiguration {
+    protected final String queueName = "shipping-task";
 
     @Autowired
     private ShippingTaskHandler shippingTaskHandler;
 
-	@Bean
-	public RabbitTemplate rabbitTemplate() {
-		RabbitTemplate template = new RabbitTemplate(connectionFactory());
-		template.setQueue(this.queueName);
+    @Bean
+    public RabbitTemplate rabbitTemplate() {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory());
+        template.setQueue(this.queueName);
         template.setMessageConverter(jsonMessageConverter());
-		return template;
-	}
+        return template;
+    }
 
     @Bean
-	public Queue queueName() {
-		return new Queue(this.queueName, false);
-	}
+    public Queue queueName() {
+        return new Queue(this.queueName, false);
+    }
 
-	@Bean
-	public SimpleMessageListenerContainer listenerContainer() {
-		SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
-		container.setConnectionFactory(connectionFactory());
-		container.setQueueNames(this.queueName);
-		container.setMessageListener(messageListenerAdapter());
+    @Bean
+    public SimpleMessageListenerContainer listenerContainer() {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory());
+        container.setQueueNames(this.queueName);
+        container.setMessageListener(messageListenerAdapter());
 
-		return container;
-	}
+        return container;
+    }
 
     @Bean
     public MessageListenerAdapter messageListenerAdapter() {
